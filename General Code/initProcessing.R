@@ -18,4 +18,4 @@ save(cn, file = paste('cn', year, '.rda', sep = "", collapse = NULL))
 com <- read.delim(paste('cm', year, '.txt', sep = "", collapse = NULL), header = FALSE, sep = '|', quote = "")
 com <- com[, c(1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)]
 names(com) = c("comID", "comName", "treasName", "city", "state", "zip", "comDes", "comType", "comParty", "filingFreq", "interestGroup", "connOrg", "canID")
-save(cm, file = paste('cm', year, '.rda', sep = "", collapse = NULL))
+save(com, file = paste('cm', year, '.rda', sep = "", collapse = NULL))
