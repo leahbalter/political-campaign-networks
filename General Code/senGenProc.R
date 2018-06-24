@@ -1,7 +1,7 @@
 year <- readline(prompt = "Please enter the year")
 
 load(file = paste('cn', year, '.rda', sep = "", collapse = NULL))
-load(file = paste('rawTrans', year, '.rda', sep = "", collapse = NULL))
+load(file = paste('trans', year, '.rda', sep = "", collapse = NULL))
 
 sen <- subset(cn, office == "S")
 state <- data.frame("state", stringsAsFactors = FALSE)
