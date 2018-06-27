@@ -1,5 +1,4 @@
 # this version has a more robust way of checking if a transaction pertains to a general election or a primary election
-
 year <- readline(prompt = "Please enter the year")
 
 load(file = paste('cn', year, '.rda', sep = "", collapse = NULL))
@@ -29,37 +28,20 @@ t1 <- subset(t1, date > primDate)
 senGenTrans <- rbind(t, t1)
 rm(list = c('t', 't1', 'primDate'))
 
-state <- data.frame("state", stringsAsFactors = FALSE)
-names(state) = c("state")
+pcc <- subset(senGenTrans, recID %in% sen$pccID)
+pccState <- sen[match(pcc$recID, sen$pccID),]$canState
+pcc$state = pccState
+can <- subset(senGenTrans, recID %in% sen$canID)
+canState <- sen[match(can$recID, sen$canID),]$canState
+can$state = canState
 
-# this bit is really slow so i'm going to continue trying to figure out how to do this better
-# for each recipient committee in the senGenTrans dataframe
-# i'm going back to the cn dataframe to pull the state associated with that committee
-# and creating a new dataframe with all those states
-# which gets attached to the senGenTrans dataframe as a new column
-# there's gotta be a better way to do this though
-# the rest of this script works; this works too but is super slow and clunky since it handles it line-by-line
-# so i'm going to try to figure it out
-for (i in 1:nrow(senGenTrans)) {
-    if (senGenTrans[i, ]$recID %in% sen$pccID) {
-        state[i,] <- c(as.character(sen[which(as.character(sen$pccID) == as.character(senGenTrans[i,]$recID)),]$canState))
-
-    }
-    else {
-        state[i,] <- c(as.character(sen[which(as.character(sen$canID) == as.character(senGenTrans[i,]$recID)),]$canState))
-
-    }
-
-}
-
-senGenTrans$state = NA
-senGenTrans$state = state
-rm(list = 'state')
-save(senGenTrans, paste('senGenTrans', year, 'v2', '.rda', sep = "", collapse = NULL))
+senGenTrans <- rbind(pcc, can)
+save(senGenTrans, file = paste('senGenTrans', year, 'v2', '.rda', sep = "", collapse = NULL))
+rm(list = c('pcc', 'pccState', 'can', 'canState'))
 
 temp <- data.frame(senGenTrans$sendID, senGenTrans$amount, senGenTrans$state)
 names(temp) = c("sendID", "amount", "state")
 
 elSenGen <- aggregate(amount ~ sendID + state, temp, sum)
 write.table(elSenGen, file = paste('elSenGen', year, 'v2', '.txt', sep = "", collapse = NULL), row.names = FALSE, col.names = TRUE, quote = FALSE)
-rm(list = c('temp', 'elSenGen'))
+rm(list = c('temp', 'elSenGen', 'senGenTrans'))
