@@ -19,14 +19,14 @@ senGenTrans <- subset(senGenTrans, recID %in% sen$canID | recID %in% sen$pccID)
 senGenTrans <- subset(senGenTrans, recID != "")
 senGenTrans <- subset(senGenTrans, amount > 0)
 
-primDate <- readline(prompt = "Please enter the primary cutoff date in the format MMDDYYYY:")
-primDate <- as.Date(primDate, '%m%d%Y')
+#primDate <- readline(prompt = "Please enter the primary cutoff date in the format MMDDYYYY:")
+#primDate <- as.Date(primDate, '%m%d%Y')
 
-t <- subset(senGenTrans, elType == 'G' | elType == paste('G', year, sep = "", collaspe = NULL))
-t1 <- subset(senGenTrans, elType != 'G' & elType != 'P' & elType != paste('G', year, sep = "", collapse = NULL) & elType != paste('P', year, sep = "", collapse = NULL))
-t1 <- subset(t1, date > primDate)
-senGenTrans <- rbind(t, t1)
-rm(list = c('t', 't1', 'primDate'))
+senGenTrans <- subset(senGenTrans, elType == 'G' | elType == paste('G', year, sep = "", collaspe = NULL))
+#t1 <- subset(senGenTrans, elType != 'G' & elType != 'P' & elType != paste('G', year, sep = "", collapse = NULL) & elType != paste('P', year, sep = "", collapse = NULL))
+#t1 <- subset(t1, date > primDate)
+#senGenTrans <- rbind(t, t1)
+#rm(list = c('t', 't1', 'primDate'))
 
 pcc <- subset(senGenTrans, recID %in% sen$pccID)
 pccState <- sen[match(pcc$recID, sen$pccID),]$canState
