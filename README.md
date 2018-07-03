@@ -1,4 +1,4 @@
-#Political Campaign Contributions Networks
+# Political Campaign Contributions Networks
 
 This research began as a project for my Complex Network Science class (Math 168, UCLA, Spring 2018), which I have continued to study post-graduation. 
 
