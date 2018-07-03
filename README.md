@@ -1,5 +1,3 @@
-# Political Campaign Contribution Networks
-
 This research began as a project for my Complex Network Science class (Math 168, UCLA, Spring 2018), which I have continued to study post-graduation. 
 
 A network is a structure that comprises of entities and the relationships between them; if two entities in the network - two nodes of the network - are connected in some way, we say that there is an edge between those two nodes. An example of a social network is Facebook; each account is a node in the network, and friendships between accounts represent edges. Depending on how the network is defined, some edges may have more weight than other edges, thus representing the strength of those relationships.
