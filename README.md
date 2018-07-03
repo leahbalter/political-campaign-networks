@@ -1,6 +1,6 @@
-This research began as a project for my Complex Network Science class (Math 168, UCLA, Spring 2018), which I have continued to study post-graduation. 
+This research began as a project for my Complex Network Science class (Math 168, UCLA, Spring 2018), which I have continued to study post-graduation. One of my main collaborators for is [Aviva Prins](https://avivaprins.github.io/), and we both thank Professor Mason Porter for overseeing this project. 
 
-A network is a structure that comprises of entities and the relationships between them; if two entities in the network - two nodes of the network - are connected in some way, we say that there is an edge between those two nodes. An example of a social network is Facebook; each account is a node in the network, and friendships between accounts represent edges. Depending on how the network is defined, some edges may have more weight than other edges, thus representing the strength of those relationships.
+A network is a structure that comprises of entities and the relationships between them; if two entities in the network - two nodes of the network - are connected in some way, we say that there is an edge between those two nodes. An example of a social network is Facebook; each account is a node in the network, and friendships between accounts represent edges. Depending on how the network is defined, some edges may have more weight than other edges, thus representing the relative strength of each relationship. 
 
 In the project, I used data from the FEC (originally compiled by Andrew Waugh) to create committee-state bipartite networks in order to study senatorial general elections in 2008 and 2010. In this network, a node is a either a committee or a state, while an edge between a committee and a state signifies that the committee donated money to a senatorial general election candidate in that state, with the weight of the edge corresponding to the total sum of money that committee donated to candidates from that state. 
 
@@ -12,4 +12,3 @@ I believe that the technique I used to study senatorial elections can be extende
 
 The dataset for this project was obtained from the [FEC website](https://classic.fec.gov/finance/disclosure/ftpdet.shtml), using the 'Any Transaction from One Committee to Another,' 'Candidate Master', and 'Committee Master' files for 2000-2016. (Final dataset obtained 7/2/2018).
 
-One of my main collaborators for this project is [Aviva Prins](https://avivaprins.github.io/). We both thank Professor Mason Porter for overseeing this project. 
