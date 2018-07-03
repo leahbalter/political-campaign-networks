@@ -14,4 +14,4 @@ I believe that the technique I used to study senatorial elections can be extende
 
 The dataset for this project was obtained from the [FEC website](https://classic.fec.gov/finance/disclosure/ftpdet.shtml), using the 'Any Transaction from One Committee to Another,' 'Candidate Master', and 'Committee Master' files for 2000-2016. (Final dataset obtained 7/2/2018).
 
-The code for this project can be found on my github, [here](https://github.com/leahbalter), and one of my main collaborators for this project is [Aviva Prins](https://avivaprins.github.io/)
+One of my main collaborators for this project is [Aviva Prins](https://avivaprins.github.io/). We both thank Professor Mason Porter for overseeing this project. 
