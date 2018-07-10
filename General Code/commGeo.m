@@ -1,7 +1,7 @@
 % RUN AFTER elGeo.m
 % RUN BEFORE compCom.m
 
-% passes in a graph and a year
+% passes in a graph filename (string) and a year
 % does community detection using two algorithms from the bct toolbox:
 % louvain and modularity maximization
 % it would probably be a good idea to look up the algorithms for the paper
@@ -11,12 +11,13 @@
 % returns the modified graph object with the community identifiers stored
 % as an attribute/column in the g.Nodes table
 
-function g = commGeo(g, year)
+function g = commGeo(graph_filename, year)
+    g = importdata(graph_filename);
     year = num2str(year);
     a = adjacency(g);
     
-     [com Q] = modularity_und(a);
-     g.Nodes.com = com;
+    [com Q] = modularity_und(a);
+    g.Nodes.com = com;
     [lcom lQ] = community_louvain(a);
     g.Nodes.lCom = lcom;
     
@@ -25,11 +26,11 @@ function g = commGeo(g, year)
     ind = find(ismember(rowNames, states)); % and this is an index of all rows that have state value
     gState = g.Nodes(ind,:);
     
-    c1 = ['gGeo' year '.mat'];
-    c2 = ['states' year '.mat'];
+    c1 = ['../Data and Results/2006/gGeo' year '.mat'];
+    c2 = ['../Data and Results/2006/states' year '.mat'];
     save(c1, 'g');
     save(c2, 'gState');
     
-    writetable(g.Nodes, strcat('nodes', year, '.csv'));
-    writetable(gState, strcat('stateNodes', year, '.csv'));
+    writetable(g.Nodes, strcat('../Data and Results/2006/nodes', year, '.csv'));
+    writetable(gState, strcat('../Data and Results/2006/stateNodes', year, '.csv'));
 end 
