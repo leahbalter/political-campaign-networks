@@ -1,13 +1,16 @@
 transFileName <- readline(prompt = "Please enter the name of the trans .txt file")
 year <- readline(prompt = "Please enter the year")
 
-trans <- read.delim(transFileName, header = FALSE, sep = '|')
+rawTrans <- read.delim(transFileName, header = FALSE, sep = '|')
+save(rawTrans, file = paste('rawTrans', year, '.rda', sep = "", collapse = NULL))
+trans <- rawTrans
+rm(list = 'rawTrans')
+
 trans <- trans[, c(1, 4, 6, 7, 8, 9, 10, 11, 14, 15, 16)]
 names(trans) <- c("sendID", "elType", "transCode", "recType", "recName", "recCity", "recState", "recZIP", "date", "amount", "recID")
-trans <- subset(trans, transCode == "24K" | transCode == "24Z" | transCode == "24R" | transCode == "24E" | transCode == "24C" | transCode == "24H" | transCode == "24F")
+trans <- subset(trans, transCode == '24A' | transCode == "24K" | transCode == "24Z" | transCode == "24R" | transCode == "24E" | transCode == "24C" | transCode == "24H" | transCode == "24F")
 
-date <- as.Date(sprintf('%08d', trans$date), '%m%d%Y')
-trans$date <- date
+trans$date <- as.Date(sprintf('%08d', trans$date), '%m%d%Y')
 
 save(trans, file = paste('trans', year, '.rda', sep = "", collapse = NULL))
 
