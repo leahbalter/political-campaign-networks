@@ -3,10 +3,21 @@
 #  Current transaction codes filtered: 24K, 24Z, 24R, 24E, 24C, 24H, 24F
 #  Input: year, trans, cn, and cm .txt files
 #  Output: trans, cn, and cm .rda files
-transFileName <- readline(prompt = "Please enter the name of the trans .txt file")
-year <- readline(prompt = "Please enter the year")
 
-trans <- read.delim(transFileName, header = FALSE, sep = '|')
+# Read the location of the data
+# Assumes the filepath contains the year
+# An easy way to copy the filepath: 
+# go to trans.txt, right click->properties
+# copy the location field
+filepath <- readline(prompt = "Enter the filepath to trans, cn, and cm .txt files")
+year = gsub("\\D+","",filepath)
+
+filepath_trans <- paste(filepath, '\\trans', year, '.txt', sep='', collapse = NULL)
+filepath_cn <- paste(filepath, '\\cn', year, '.txt', sep='', collapse = NULL)
+filepath_cm <- paste(filepath, '\\cm', year, '.txt', sep='', collapse = NULL)
+
+# Filter the transactions
+trans <- read.delim(filepath_trans, header = FALSE, sep = '|', quote = "")
 trans <- trans[, c(1, 4, 6, 7, 8, 9, 10, 11, 14, 15, 16)]
 names(trans) <- c("sendID", "elType", "transCode", "recType", "recName", "recCity", "recState", "recZIP", "date", "amount", "recID")
 trans <- subset(trans, transCode == "24K" | transCode == "24Z" | transCode == "24R" | transCode == "24E" | transCode == "24C" | transCode == "24H" | transCode == "24F")
@@ -14,15 +25,17 @@ trans <- subset(trans, transCode == "24K" | transCode == "24Z" | transCode == "2
 date <- as.Date(sprintf('%08d', trans$date), '%m%d%Y')
 trans$date <- date
 
-save(trans, file = paste('trans', year, '.rda', sep = "", collapse = NULL))
+save(trans, file = paste(filepath ,'\\trans', year, '.rda', sep = "", collapse = NULL))
 
-cn <- read.delim(paste('cn', year, '.txt', sep = "", collapse = NULL), header = FALSE, sep = '|', quote = "")
+# Filter the candidates
+cn <- read.delim(filepath_cn, header = FALSE, sep = '|', quote = "")
 cn <- cn[, c(1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15)]
 names(cn) = c("canID", "canName", "party", "elYear", "canState", "office", "district", "incumbent", "pccID", "cityAdd", "stateAdd", "zipAdd")
 
-save(cn, file = paste('cn', year, '.rda', sep = "", collapse = NULL))
+save(cn, file = paste(filepath ,'\\cn', year, '.rda', sep = "", collapse = NULL))
 
-com <- read.delim(paste('cm', year, '.txt', sep = "", collapse = NULL), header = FALSE, sep = '|', quote = "")
+# Filter the committees
+com <- read.delim(filepath_cm, header = FALSE, sep = '|', quote = "")
 com <- com[, c(1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)]
 names(com) = c("comID", "comName", "treasName", "city", "state", "zip", "comDes", "comType", "comParty", "filingFreq", "interestGroup", "connOrg", "canID")
-save(com, file = paste('cm', year, '.rda', sep = "", collapse = NULL))
+save(com, file = paste(filepath ,'\\cm', year, '.rda', sep = "", collapse = NULL))
