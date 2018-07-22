@@ -7,8 +7,8 @@
 # Read the location of the data
 # Assumes the filepath contains the year
 # An easy way to copy the filepath: 
-# go to trans.txt, right click->properties
-# copy the location field
+# go to the folder, right click on the filepath bar
+# copy the address
 filepath <- readline(prompt = "Enter the filepath to trans, cn, and cm .txt files")
 year = gsub("\\D+","",filepath)
 
