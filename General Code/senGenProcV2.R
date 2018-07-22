@@ -1,3 +1,9 @@
+## senGenProcV2.R
+#  Version 2
+#  Generates the committee-state network for general Senate elections
+#  Input: trans and cn .rda files and year
+#  Output: senGenTransXXXX.rda and elSenGenXXXX.txt
+
 # this version has a more robust way of checking if a transaction pertains to a general election or a primary election
 year <- readline(prompt = "Please enter the year")
 
