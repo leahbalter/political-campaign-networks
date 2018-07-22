@@ -1,8 +1,8 @@
 ## initProcessing.R
 #  Processes trans, cn, and cm files to only include the desired transactions
 #  Current transaction codes filtered: 24K, 24Z, 24R, 24E, 24C, 24H, 24F
-#  Input: year, trans, cn, and cm .txt files
-#  Output: trans, cn, and cm .rda files
+#  Input: filepath to trans, cn, and cm .txt files
+#  Output: trans, cn, and cm .rda files (saved to same filepath as input)
 
 # Read the location of the data
 # Assumes the filepath contains the year

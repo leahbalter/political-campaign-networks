@@ -1,14 +1,18 @@
 ## senGenProcV2.R
-#  Version 2
+#  Version 2 - better sorting primary versus general election transactions
 #  Generates the committee-state network for general Senate elections
-#  Input: trans and cn .rda files and year
-#  Output: senGenTransXXXX.rda and elSenGenXXXX.txt
+#  Input: filpath to trans and cn .rda files
+#  Output: senGenTransXXXX.rda (saved to the above filepath)
+#          elSenGenXXXXV2.txt  (saved to the github related folder path)
 
 # this version has a more robust way of checking if a transaction pertains to a general election or a primary election
-year <- readline(prompt = "Please enter the year")
 
-load(file = paste('cn', year, '.rda', sep = "", collapse = NULL))
-load(file = paste('trans', year, '.rda', sep = "", collapse = NULL))
+# Read the data
+filepath <- readline(prompt = "Enter the filepath to trans and cn .rda files")
+year = gsub("\\D+","",filepath)
+
+load(file = paste(filepath ,'\\cn', year, '.rda', sep = "", collapse = NULL))
+load(file = paste(filepath ,'\\trans', year, '.rda', sep = "", collapse = NULL))
 
 sen <- subset(cn, office == "S")
 sen <- subset(sen, elYear == year)
@@ -42,12 +46,12 @@ canState <- sen[match(can$recID, sen$canID),]$canState
 can$state = canState
 
 senGenTrans <- rbind(pcc, can)
-save(senGenTrans, file = paste('senGenTrans', year, 'v2', '.rda', sep = "", collapse = NULL))
+save(senGenTrans, file = paste(filepath, '\\senGenTrans', year, 'v2', '.rda', sep = "", collapse = NULL))
 rm(list = c('pcc', 'pccState', 'can', 'canState'))
 
 temp <- data.frame(senGenTrans$sendID, senGenTrans$amount, senGenTrans$state)
 names(temp) = c("sendID", "amount", "state")
 
 elSenGen <- aggregate(amount ~ sendID + state, temp, sum)
-write.table(elSenGen, file = paste('elSenGen', year, 'v2', '.txt', sep = "", collapse = NULL), row.names = FALSE, col.names = TRUE, quote = FALSE)
+write.table(elSenGen, file = paste('..\\Data and Results\\', year, '\\elSenGen', year, 'v2', '.txt', sep = "", collapse = NULL), row.names = FALSE, col.names = TRUE, quote = FALSE)
 rm(list = c('temp', 'elSenGen', 'senGenTrans'))
