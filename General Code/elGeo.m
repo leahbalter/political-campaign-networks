@@ -41,12 +41,15 @@
 % AFTER YOU RUN THAT
 % you can run compCom.m on two graph objects that have the community
 % identifiers embedded within them
-
-fileName = input('Please enter the .txt edgelist file ', 's')
 year = input('Please enter the year ');
 year = num2str(year);
 
 gitFileName = input('Please enter the git file location: ', 's')
+% If the network is on the git page, otherwise see below
+fileName = strcat(gitFileName, '\elSenGen', year, 'v2.txt');
+% fileName = input('Please enter the .txt edgelist file ', 's')
+
+filepath_backups = input('Enter the backup save location: ', 's')
 
 tdfread(fileName, ' ');
 
@@ -77,11 +80,11 @@ rowNames = table2array(g.Nodes(:,1));
 ind = find(ismember(rowNames, states)); % and this is an index of all rows that have state value
 gState = g.Nodes(ind,:);
 
-save(strcat('gGeo', year, '.mat'), 'g');
-save(strcat('states', year, '.mat'), 'gState');
+save(strcat(filepath_backups, '\gGeo', year, '.mat'), 'g');
+save(strcat(filepath_backups, '\states', year, '.mat'), 'gState');
 
-writetable(g.Nodes, strcat('nodes', year, '.csv'));
-writetable(gState, strcat('stateNodes', year, '.csv'));
+% writetable(g.Nodes, strcat('nodes', year, '.csv'));
+% writetable(gState, strcat('stateNodes', year, '.csv'));
 writetable(g.Nodes, strcat(gitFileName, '\nodes', year, '.csv'))
 writetable(gState, strcat(gitFileName, '\stateNodes', year, '.csv'))
 clear

@@ -1,3 +1,9 @@
+## senGenProc.R
+#  Version 1
+#  Generates the committee-state network for general Senate elections
+#  Input: trans and cn .rda files and year
+#  Output: senGenTransXXXX.rda and elSenGenXXXX.txt
+
 year <- readline(prompt = "Please enter the year")
 
 load(file = paste('cn', year, '.rda', sep = "", collapse = NULL))
