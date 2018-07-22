@@ -1,3 +1,8 @@
+## initProcessing.R
+#  Processes trans, cn, and cm files to only include the desired transactions
+#  Current transaction codes filtered: 24K, 24Z, 24R, 24E, 24C, 24H, 24F
+#  Input: year, trans, cn, and cm .txt files
+#  Output: trans, cn, and cm .rda files
 transFileName <- readline(prompt = "Please enter the name of the trans .txt file")
 year <- readline(prompt = "Please enter the year")
 
