@@ -1,6 +1,6 @@
 ## initProcessing.R
 #  Processes trans, cn, and cm files to only include the desired transactions
-#  Current transaction codes filtered: 24K, 24Z, 24R, 24E, 24C, 24H, 24F
+#  Current transaction codes filtered: 24K, 24Z, 24R, 24E, 24C, 24H, 24F, 24A, 24N
 #  Input: filepath to trans, cn, and cm .txt files
 #  Output: trans, cn, and cm .rda files (saved to same filepath as input)
 
@@ -16,11 +16,15 @@ filepath_trans <- paste(filepath, '\\trans', year, '.txt', sep='', collapse = NU
 filepath_cn <- paste(filepath, '\\cn', year, '.txt', sep='', collapse = NULL)
 filepath_cm <- paste(filepath, '\\cm', year, '.txt', sep='', collapse = NULL)
 
+rawTrans <- read.delim(filepath_trans, header = FALSE, sep = '|')
+save(rawTrans, file = paste(filepath, '\\rawTrans', year, '.rda', sep = "", collapse = NULL))
+trans <- rawTrans
+rm(list = 'rawTrans')
+
 # Filter the transactions
-trans <- read.delim(filepath_trans, header = FALSE, sep = '|', quote = "")
 trans <- trans[, c(1, 4, 6, 7, 8, 9, 10, 11, 14, 15, 16)]
 names(trans) <- c("sendID", "elType", "transCode", "recType", "recName", "recCity", "recState", "recZIP", "date", "amount", "recID")
-trans <- subset(trans, transCode == "24K" | transCode == "24Z" | transCode == "24R" | transCode == "24E" | transCode == "24C" | transCode == "24H" | transCode == "24F")
+trans <- subset(trans, transCode == '24A' | transCode == '24N' | transCode == "24K" | transCode == "24Z" | transCode == "24R" | transCode == "24E" | transCode == "24C" | transCode == "24H" | transCode == "24F")
 
 date <- as.Date(sprintf('%08d', trans$date), '%m%d%Y')
 trans$date <- date
