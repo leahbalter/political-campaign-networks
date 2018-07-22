@@ -41,18 +41,15 @@
 % AFTER YOU RUN THAT
 % you can run compCom.m on two graph objects that have the community
 % identifiers embedded within them
-% year = input('Please enter the year ');
-year = 2018;
+year = input('Please enter the year ');
 year = num2str(year);
 
-% gitFileName = input('Please enter the git file location: ', 's')
-gitFileName = strcat('D:\Aviva\Documents\political-campaign-networks\Data and Results\' , year);
+gitFileName = input('Please enter the git file location: ', 's')
 % If the network is on the git page, otherwise see below
 fileName = strcat(gitFileName, '\elSenGen', year, 'v2.txt');
 % fileName = input('Please enter the .txt edgelist file ', 's')
 
-% filepath_backups = input('Enter the backup save location: ', 's')
-filepath_backups = strcat('D:\Aviva\Documents\Political Donations Dataset\', year);
+filepath_backups = input('Enter the backup save location: ', 's')
 
 tdfread(fileName, ' ');
 
