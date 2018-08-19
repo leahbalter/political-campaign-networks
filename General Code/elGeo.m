@@ -46,7 +46,9 @@ year = num2str(year);
 
 gitFileName = input('Please enter the git file location: ', 's')
 % If the network is on the git page, otherwise see below
-fileName = strcat(gitFileName, '\elSenGen', year, 'v2.txt');
+% CHANGE FOR V2/V3
+% fileName = strcat(gitFileName, '\elSenGen', year, 'v2.txt');
+fileName = strcat(gitFileName, '\elSenGen', year, 'v3.txt');
 % fileName = input('Please enter the .txt edgelist file ', 's')
 
 filepath_backups = input('Enter the backup save location: ', 's')
@@ -80,8 +82,11 @@ rowNames = table2array(g.Nodes(:,1));
 ind = find(ismember(rowNames, states)); % and this is an index of all rows that have state value
 gState = g.Nodes(ind,:);
 
-save(strcat(filepath_backups, '\gGeo', year, '.mat'), 'g');
-save(strcat(filepath_backups, '\states', year, '.mat'), 'gState');
+% CHANGE FOR V2/V3
+% save(strcat(filepath_backups, '\gGeo', year, '.mat'), 'g');
+% save(strcat(filepath_backups, '\states', year, '.mat'), 'gState');
+save(strcat(filepath_backups, '\gGeo', year, 'V3.mat'), 'g');
+save(strcat(filepath_backups, '\states', year, 'V3.mat'), 'gState');
 
 % writetable(g.Nodes, strcat('nodes', year, '.csv'));
 % writetable(gState, strcat('stateNodes', year, '.csv'));
