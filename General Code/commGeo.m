@@ -26,11 +26,13 @@ function g = commGeo(graph_filename, year)
     ind = find(ismember(rowNames, states)); % and this is an index of all rows that have state value
     gState = g.Nodes(ind,:);
     
-    c1 = ['../Data and Results/' year '/gGeo' year '.mat'];
-    c2 = ['../Data and Results/' year '/states' year '.mat'];
+    % CHANGE FOR V2/V3
+    c1 = ['../Data and Results/' year '/SenV3/gGeo' year '.mat'];
+    c2 = ['../Data and Results/' year '/SenV3/states' year '.mat'];
     save(c1, 'g');
     save(c2, 'gState');
     
-    writetable(g.Nodes, strcat('../Data and Results/', year, '/nodes', year, '.csv'));
-    writetable(gState, strcat('../Data and Results/', year, '/stateNodes', year, '.csv'));
+    % CHANGE FOR V2/V3
+    writetable(g.Nodes, strcat('../Data and Results/', year, '/SenV3/nodes', year, '.csv'));
+    writetable(gState, strcat('../Data and Results/', year, '/SenV3/stateNodes', year, '.csv'));
 end 
