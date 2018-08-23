@@ -32,28 +32,28 @@ net_res <- read.csv(paste(network_file, year, '/stateNodes', year, '.csv', sep =
 names(net_res) <- c('state', 'wdeg', 'deg', 'wpr', 'pr', 'weig', 'eig')
 
 # getting the election results .xls (or .xlsx) and converting it into a dataframe with named columns
-# states are labeled as regions because this dataframe is going to be merged with the dataframe that holds the long/lat info for the states and 
-# geoegraphic regions in the mapdata dataframes are known as 'regions' so as to be general and include countries or provnces etc
+# states are labeled as id because this dataframe is going to be merged with the dataframe that holds the long/lat info for the states and 
+# geoegraphic regions in the mapdata dataframes are known as 'id' 
 sen_res <- read_excel(paste(margin_file, '/federalelections', year, ext, sep = "", collapse = NULL), sheet = '2016 US Senate Results by State')
 sen_res <- sen_res[c(2, 3, 5, 6, 9, 11, 16, 17)]
-names(sen_res) <- c('abv', 'region', 'fecID', 'inc', 'canName', 'party', 'votes', 'percent')
+names(sen_res) <- c('abv', 'id', 'fecID', 'inc', 'canName', 'party', 'votes', 'percent')
 
 # in the maps dataframe the state names are lowercase so i convert it them to lowercase too 
 # also only selecting the rows of the senatorial results dataframes for candidates in the general election +
 # the total number of votes iirc
-sen_res$region <- tolower(sen_res$region)
+sen_res$id <- tolower(sen_res$id)
 sen_res <- sen_res %>%
-    filter(votes != 'NA' & region != 'NA')
+    filter(votes != 'NA' & id != 'NA')
 
 # adding the lowercase statenames to the dataframe of metric data
-net_res$region <- NA
-net_res$region = sen_res[match(net_res$state, sen_res$abv),]$region
+net_res$id <- NA
+net_res$id = sen_res[match(net_res$state, sen_res$abv),]$id
 
 # making a new dataframe to hold: 
 # state, margin of victory, party of the victory, indicator for whether the incumbent ran
 # and another to indicate if there was a signifcant third party ('significant' here defined as the two major candidates got less than 90% of the vote)
-s <- unique(sen_res$region)
-a <- data.frame(region = s)
+s <- unique(sen_res$id)
+a <- data.frame(id = s)
 a$diff <- NA
 a$party <- NA
 a$inc <- NA
@@ -62,7 +62,7 @@ a$third <- NA
 # populating the dataframe with a for loop
 i = 1
 for (val in s) {
-    temp <- subset(sen_res, region == val)
+    temp <- subset(sen_res, id == val)
     temp <- temp[-nrow(temp),]
     temp <- temp[order(-temp$votes),]
 
@@ -84,9 +84,9 @@ for (val in s) {
 }
 
 # merging the new 'a' dataframe that holds margin of victory info with the dataframe taht holds state geographic data
-states <- map_data('state')
-temp <- inner_join(states, a, by = 'region')
-temp1 <- inner_join(states, net_res, by = 'region')
+states <- fifty_states
+temp <- inner_join(states, a, by = 'id')
+temp1 <- inner_join(states, net_res, by = 'id')
 
 # i don't remember what each line here does but it craetes the base of the map
 map_base <- ggplot(data = states, mapping = aes(x = long, y = lat, group = group)) +
