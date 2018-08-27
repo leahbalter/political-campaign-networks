@@ -1,4 +1,4 @@
-# whole bunch of packages i use for this
+# whole bunch of packages I use for this
 library('readxl')
 library('dplyr')
 library('ggplot2')
@@ -8,33 +8,31 @@ library('mapdata')
 library('gridExtra')
 library('fiftystater')
 
+year <- 2016 # Change as necessary
+# year <- readline(prompt = 'please enter the year: ')
+
 # useful file locations stored for later
-# git_file = root of location of where github files are stored on my computer
-# pdf_file = root fo the location where i'm going to store the pdf on my computer
-# margin_file = root of location for where i stored the fec excel files for election results
+# git_filepath = location of data and results in github repo
+# election_results_filepath = location of the election results (in github repo)
+# figures_filepath = location to store the figures (in both .pdf and .png forms)
 
-git_file <- 'C:/Users/leahm/Documents/GitHub/political-campaign-networks/Data and Results/'
-pdf_file <- '~/Coding/political campaign project/RStuff/RStuff/results/'
-margin_file <- 'C:/Users/leahm/Documents/Coding/political campaign project/RStuff/RStuff/data/resultsFEC/'
-year <- readline(prompt = 'please enter the year: ')
-
-# election result data for the fec is in an excel file; 2016 is a .xlsx; earlier years are .xls
-# also i ran into a problem where the fec only has the excel files for election results from i think 2000 on (maybe it was 1998, i don't remember)
-if (year == '2016') {
-    ext <- '.xlsx'
-} else {
-    ext <- '.xls'
-}
+git_filepath <- paste('..\\Data and Results\\', year, sep = "", collapse = NULL) 
+# figures_file <- '~/Coding/political campaign project/RStuff/RStuff/results/'
+dir.create(file.path(paste('..\\Data and Results\\', year, sep = "", collapse = NULL), 'Figures'))
+figures_filepath <- paste('..\\Data and Results\\', year, '\\Figures\\', sep = "", collapse = NULL)
+# election_results_filepath <- 'C:/Users/leahm/Documents/Coding/political campaign project/RStuff/RStuff/data/resultsFEC/'
+election_results_filepath <- '..\\Data and Results\\Election Results'
 
 # getting the network metrics .csv as computed in matlab for that year and converting it into a dataframe and converting it into named columns
-network_file <- 'C:/Users/leahm/Documents/Coding/political campaign project/matlabStuff/results/'
-net_res <- read.csv(paste(network_file, year, '/stateNodes', year, '.csv', sep = "", collapse = NULL))
+# network_file <- 'C:/Users/leahm/Documents/Coding/political campaign project/matlabStuff/results/'
+net_res <- read.csv(paste(git_filepath, '\\stateNodes', year, '.csv', sep = "", collapse = NULL))
 names(net_res) <- c('state', 'wdeg', 'deg', 'wpr', 'pr', 'weig', 'eig')
 
-# getting the election results .xls (or .xlsx) and converting it into a dataframe with named columns
+# getting the election results .xls and converting it into a dataframe with named columns
 # states are labeled as id because this dataframe is going to be merged with the dataframe that holds the long/lat info for the states and 
 # geoegraphic regions in the mapdata dataframes are known as 'id' 
-sen_res <- read_excel(paste(margin_file, '/federalelections', year, ext, sep = "", collapse = NULL), sheet = '2016 US Senate Results by State')
+# TODO: generalize
+sen_res <- read_excel(paste(margin_file, '/federalelections', year, '.xls', sep = "", collapse = NULL), sheet = '2016 US Senate Results by State')
 sen_res <- sen_res[c(2, 3, 5, 6, 9, 11, 16, 17)]
 names(sen_res) <- c('abv', 'id', 'fecID', 'inc', 'canName', 'party', 'votes', 'percent')
 
@@ -126,12 +124,24 @@ g1 <- map_base +
 # putting both maps on top of each other
 a <- grid.arrange(g, g1, nrow = 2)
 
-# saving as a pdf in my R-code folder
-pdf(paste(pdf_file, year, '/yearComp', '.pdf', sep = "", collapse = NULL))
+pdf(paste(figures_filepath, '\\wPR_election_results_comparison', year, '.pdf', sep = "", collapse = NULL))
 plot(a)
 dev.off()
 
-# saving as a pdf in my github-files folder
-pdf(paste(git_file, year, '/yearComp', '.pdf', sep = "", collapse = NULL))
-plot(a)
+png(paste(figures_filepath, '\\wPR', year, '.png', sep = "", collapse = NULL))
+plot(g1)
 dev.off()
+
+png(paste(figures_filepath, '\\election_results_margin', year, '.png', sep = "", collapse = NULL))
+plot(g)
+dev.off()
+
+# # saving as a pdf in my R-code folder
+# pdf(paste(pdf_file, year, '/yearComp', '.pdf', sep = "", collapse = NULL))
+# plot(a)
+# dev.off()
+# 
+# # saving as a pdf in my github-files folder
+# pdf(paste(git_file, year, '/yearComp', '.pdf', sep = "", collapse = NULL))
+# plot(a)
+# dev.off()
