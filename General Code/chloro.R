@@ -2,7 +2,7 @@
 library('readxl')
 library('dplyr')
 library('ggplot2')
-library('ggmap')
+#library('ggmap')
 library('maps')
 library('mapdata')
 library('gridExtra')
@@ -16,7 +16,8 @@ library('fiftystater')
 git_file <- 'C:/Users/leahm/Documents/GitHub/political-campaign-networks/Data and Results/'
 pdf_file <- '~/Coding/political campaign project/RStuff/RStuff/results/'
 margin_file <- 'C:/Users/leahm/Documents/Coding/political campaign project/RStuff/RStuff/data/resultsFEC/'
-year <- readline(prompt = 'please enter the year: ')
+year <- 2016
+sheet_name <- '2016 US Senate Results by State'
 
 # election result data for the fec is in an excel file; 2016 is a .xlsx; earlier years are .xls
 # also i ran into a problem where the fec only has the excel files for election results from i think 2000 on (maybe it was 1998, i don't remember)
@@ -34,9 +35,9 @@ names(net_res) <- c('state', 'wdeg', 'deg', 'wpr', 'pr', 'weig', 'eig')
 # getting the election results .xls (or .xlsx) and converting it into a dataframe with named columns
 # states are labeled as id because this dataframe is going to be merged with the dataframe that holds the long/lat info for the states and 
 # geoegraphic regions in the mapdata dataframes are known as 'id' 
-sen_res <- read_excel(paste(margin_file, '/federalelections', year, ext, sep = "", collapse = NULL), sheet = '2016 US Senate Results by State')
-sen_res <- sen_res[c(2, 3, 5, 6, 9, 11, 16, 17)]
-names(sen_res) <- c('abv', 'id', 'fecID', 'inc', 'canName', 'party', 'votes', 'percent')
+sen_res <- read_excel(paste(margin_file, '/federalelections', year, ext, sep = "", collapse = NULL), sheet = sheet_name)
+sen_res <- sen_res[c(2, 3, 5, 6, 9, 11, 16)]
+names(sen_res) <- c('abv', 'id', 'fecID', 'inc', 'canName', 'party', 'votes')
 
 # in the maps dataframe the state names are lowercase so i convert it them to lowercase too 
 # also only selecting the rows of the senatorial results dataframes for candidates in the general election +
@@ -63,10 +64,23 @@ a$third <- NA
 i = 1
 for (val in s) {
     temp <- subset(sen_res, id == val)
+    row <- temp[nrow(temp),]
     temp <- temp[-nrow(temp),]
     temp <- temp[order(-temp$votes),]
+    temp <- rbind(temp, row)
+    temp$percent <- NA
 
-     a[i,]$diff = temp[1,]$percent - temp[2,]$percent
+    for (j in 1:nrow(temp)) {
+        total_votes <- sum(temp[which(temp$canName == temp[j,]$canName),]$votes) 
+        temp[j,]$percent <- total_votes / temp[nrow(temp),]$votes
+
+        if (j == nrow(temp)) {
+            temp[j,]$percent <- 1.0
+        }
+    }
+    round(temp$percent, digits =6)
+
+    a[i,]$diff = temp[1,]$percent - temp[2,]$percent
     a[i,]$party = temp[1,]$party
 
     if ('(I)' %in% temp$inc) {
@@ -87,6 +101,7 @@ for (val in s) {
 states <- fifty_states
 temp <- inner_join(states, a, by = 'id')
 temp1 <- inner_join(states, net_res, by = 'id')
+
 
 # i don't remember what each line here does but it craetes the base of the map
 map_base <- ggplot(data = states, mapping = aes(x = long, y = lat, group = group)) +
@@ -110,18 +125,19 @@ g <- map_base +
     theme_bw() +
     ditch_the_axes +
     ggtitle('Margin of Victory in the 2016 US Senatorial Elections') +
-    scale_fill_gradient(trans = 'sqrt', low = '#206020', high = '#b3e6b3', '')
-
+    scale_fill_gradient(trans = 'sqrt', low = '#206020', high = '#b3e6b3',
+        guide = guide_colorbar(title = 'Margin', title.position = 'bottom'))
+    
 # and on the same map base i make a new map that has shading by wPR and then formatting
 # i might have to fiddle with the exact formatting for each year; i'm not sure
-# also note that the scaling of the shading is 'sqrt' which means the more 'extreme' values are colored darker
 g1 <- map_base +
-     geom_polygon(data = temp1, aes(fill = wpr), color = 'white') +
+     geom_polygon(data = temp1, aes(fill = wpr), color = 'white',) +
      geom_polygon(color = 'black', fill = NA) +
      theme_bw() +
      ditch_the_axes +
-     ggtitle('Weighted PageRank of states in the 2016 Senatorial Elections') +
-     scale_fill_gradient(trans = 'sqrt', low = '#b3e6b3', high = '#206020', 'wPR')
+     ggtitle('Weighted PageRank of States in the 2016 Senatorial Elections') +
+     scale_fill_gradient(trans = 'log', low = '#b3e6b3', high = '#206020',
+                         guide = guide_colorbar(title ='wPR', title.position = 'bottom'))
 
 # putting both maps on top of each other
 a <- grid.arrange(g, g1, nrow = 2)
@@ -135,3 +151,14 @@ dev.off()
 pdf(paste(git_file, year, '/yearComp', '.pdf', sep = "", collapse = NULL))
 plot(a)
 dev.off()
+
+# things to change/check each time:
+# 1. year
+# 2. name of sheet
+# 3. columns and column names
+
+# assorted notes:
+# 1. manually fixed louisiana margin in 2016: runoff made the FEC sheet formatted differently
+#####: a[which(a$id == 'louisiana'),]$diff <- (536191-347816)/(536191 + 347816) (fec spreadsheet vote values)
+
+# 2. 2016: g <- 
